@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 
-export default async () => {
+const jestSetup = async () => {
   dotenv.config({ path: ".env.development" });
 };
+
+export default jestSetup;
