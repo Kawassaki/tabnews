@@ -7,30 +7,39 @@ beforeAll(async () => {
   await database.query("drop schema public cascade; create schema public;");
 });
 
-test("POST to /api/v1/migrations should return 200", async () => {
-  const firstPostResponse = await fetch(
-    "http://localhost:3000/api/v1/migrations",
-    {
-      method: "POST",
-    },
-  );
+describe("POST /api/v1/migrations", () => {
+  describe("Anonymous user", () => {
+    describe("Running pending migrations", () => {
+      test("For the first time", async () => {
+        const firstPostResponse = await fetch(
+          "http://localhost:3000/api/v1/migrations",
+          {
+            method: "POST",
+          },
+        );
 
-  const secondPostRespone = await fetch(
-    "http://localhost:3000/api/v1/migrations",
-    {
-      method: "POSTsss",
-    },
-  );
+        const firstPostResponseBody = await firstPostResponse.json();
 
-  const firstPostResponseBody = await firstPostResponse.json();
+        expect(firstPostResponse.status).toBe(201);
+        expect(Array.isArray(firstPostResponseBody)).toBe(true);
+        expect(firstPostResponseBody.length).toBeGreaterThan(0);
+      });
 
-  expect(firstPostResponse.status).toBe(201);
-  expect(Array.isArray(firstPostResponseBody)).toBe(true);
-  expect(firstPostResponseBody.length).toBeGreaterThan(0);
+      test("For the second time", async () => {
+        const secondPostRespone = await fetch(
+          "http://localhost:3000/api/v1/migrations",
+          {
+            method: "POST",
+          },
+        );
 
-  const secondPostResponseBody = await secondPostRespone.json();
+        const secondPostResponseBody = await secondPostRespone.json();
 
-  expect(secondPostRespone.status).toBe(200);
-  expect(Array.isArray(secondPostResponseBody)).toBe(true);
-  expect(secondPostResponseBody.length).toEqual(0);
-});
+        expect(secondPostRespone.status).toBe(200);
+        expect(Array.isArray(secondPostResponseBody)).toBe(true);
+        expect(secondPostResponseBody.length).toEqual(0);
+      });
+    });
+  });
+})
+
