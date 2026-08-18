@@ -1,7 +1,6 @@
 import retry from "async-retry";
 import database from "infra/database.js";
 
-
 async function waitForAllServices() {
   await waitForWebServer();
 
