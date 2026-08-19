@@ -22,14 +22,15 @@ function Database() {
   });
 
   let databaseStatusInformation = "Loading...";
+
   if (!isLoading && data) {
     databaseStatusInformation = (
       <>
         <div>Postgress version: {data.dependencies.database.version}</div>
-        <div>Max connections: {data.dependencies.database.max_connections}</div>
         <div>
-          Open connections: {data.dependencies.database.open_connections}
+          Open connections: {data.dependencies.database.opened_connections}
         </div>
+        <div>Max connections: {data.dependencies.database.max_connections}</div>
       </>
     );
   }
