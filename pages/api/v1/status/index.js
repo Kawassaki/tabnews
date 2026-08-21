@@ -3,7 +3,6 @@ import { InternalServerError } from "infra/errors.js";
 
 async function status(request, response) {
   try {
-
     const updatedAt = new Date().toISOString();
 
     const databaseVersionResult = await database.query("SHOW server_version;");
@@ -35,12 +34,11 @@ async function status(request, response) {
         },
       },
     });
-
   } catch (error) {
     const publicErrorObject = new InternalServerError({
       cause: error,
     });
-    console.error('\n Controller error:');
+    console.error("\n Controller error:");
     console.error(publicErrorObject);
     response.status(500).json(publicErrorObject);
   }
