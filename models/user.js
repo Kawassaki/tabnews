@@ -6,6 +6,7 @@ async function create(userInputValues) {
   await validateUniqueUsername(userInputValues.username);
   await validateUniqueEmail(userInputValues.email);
   await hashPasswordInObject(userInputValues);
+  await validatePassword(userInputValues.password);
 
   const newUser = await runInsertQuery(userInputValues);
   return newUser;
@@ -42,6 +43,7 @@ async function update(username, userInputValues) {
   }
 
   if ("password" in userInputValues) {
+    await validatePassword(userInputValues.password);
     await hashPasswordInObject(userInputValues);
   }
 
@@ -147,6 +149,15 @@ async function validateUniqueEmail(email) {
     throw new ValidationError({
       message: "Email already in use",
       action: "Please use a different email address.",
+    });
+  }
+}
+
+async function validatePassword(password) {
+  if (!password) {
+    throw new ValidationError({
+      message: "Password is required",
+      action: "Please provide a password.",
     });
   }
 }
