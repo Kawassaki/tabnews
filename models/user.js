@@ -1,12 +1,35 @@
 import database from "infra/database.js";
 import { ValidationError, NotFoundError } from "infra/errors.js";
+import password from "models/password.js";
 
 async function create(userInputValues) {
   await validateUniqueEmail(userInputValues.email);
   await validateUniqueUsername(userInputValues.username);
+  await hashPasswordInObject(userInputValues);
 
   const newUser = await runInsertQuery(userInputValues);
   return newUser;
+
+  async function validateUniqueEmail(email) {
+    const result = await database.query({
+      text: `
+       SELECT
+        email 
+       FROM
+        users
+       WHERE 
+        LOWER(email) = LOWER($1)
+      ;`,
+      values: [email],
+    });
+
+    if (result.rowCount > 0) {
+      throw new ValidationError({
+        message: "Email already in use",
+        action: "Please use a different email address.",
+      });
+    }
+  }
 
   async function validateUniqueUsername(username) {
     const result = await database.query({
@@ -29,25 +52,9 @@ async function create(userInputValues) {
     }
   }
 
-  async function validateUniqueEmail(email) {
-    const result = await database.query({
-      text: `
-       SELECT
-        email 
-       FROM
-        users
-       WHERE 
-        LOWER(email) = LOWER($1)
-      ;`,
-      values: [email],
-    });
-
-    if (result.rowCount > 0) {
-      throw new ValidationError({
-        message: "Email already in use",
-        action: "Please use a different email address.",
-      });
-    }
+  async function hashPasswordInObject(userInputValues) {
+    const hashedPassword = await password.hash(userInputValues.password);
+    userInputValues.password = hashedPassword;
   }
 
   async function runInsertQuery(userInputValues) {
