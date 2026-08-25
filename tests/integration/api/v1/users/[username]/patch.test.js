@@ -41,6 +41,9 @@ describe("PATCH /api/v1/users/[username]", () => {
           password: "senha123",
         }),
       });
+
+      expect(user1Response.status).toBe(201);
+
       const user2Response = await fetch("http://localhost:3000/api/v1/users", {
         method: "POST",
         headers: {
@@ -52,6 +55,8 @@ describe("PATCH /api/v1/users/[username]", () => {
           password: "senha123",
         }),
       });
+
+      expect(user2Response.status).toBe(201);
 
       const response = await fetch("http://localhost:3000/api/v1/users/user2", {
         method: "PATCH",
