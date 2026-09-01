@@ -35,7 +35,7 @@ describe("GET /api/v1/user", () => {
       expect(responseBody).toEqual({
         id: createdUser.id,
         username: "UserWithValidSessions",
-        features: [],
+        features: ["read:activation_token"],
         password: createdUser.password,
         email: createdUser.email,
         created_at: createdUser.created_at.toISOString(),
@@ -95,7 +95,7 @@ describe("GET /api/v1/user", () => {
       expect(responseBody).toEqual({
         id: createdUser.id,
         username: "UserWithValidSessionToExpire",
-        features: [],
+        features: ["read:activation_token"],
         password: createdUser.password,
         email: createdUser.email,
         created_at: createdUser.created_at.toISOString(),
