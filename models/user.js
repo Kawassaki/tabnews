@@ -235,11 +235,6 @@ async function hashPasswordInObject(userInputValues) {
 async function setFeatures(userId, features) {
   const updatedUser = await runUpdateQuery(userId, features);
   return updatedUser;
-}
-
-async function runUpdateQuery(userId, features) {
-  const updatedUser = await runUpdateQuery(userId, features);
-  return updatedUser;
 
   async function runUpdateQuery(userId, features) {
     const result = await database.query({

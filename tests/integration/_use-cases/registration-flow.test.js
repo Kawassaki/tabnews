@@ -13,6 +13,7 @@ beforeAll(async () => {
 describe("Use Case: Registration Flow (all successful)", () => {
   let createUserResponseBody;
   let activationTokenId;
+  let createSessionResponseBody;
   test("Create User Account", async () => {
     const response = await fetch("http://localhost:3000/api/v1/users", {
       method: "POST",
@@ -75,7 +76,7 @@ describe("Use Case: Registration Flow (all successful)", () => {
     expect(Date.parse(activationResponseBody.used_at)).not.toBeNaN();
 
     const actvatedUser = await user.findOneByUsername("RegistrationFlow");
-    expect(actvatedUser.features).toEqual(["create:session"]);
+    expect(actvatedUser.features).toEqual(["create:session", "read:session"]);
   });
 
   test("Login", async () => {
@@ -91,10 +92,19 @@ describe("Use Case: Registration Flow (all successful)", () => {
     });
     expect(response.status).toBe(201);
 
-    const createSessionResponseBody = await response.json();
+    createSessionResponseBody = await response.json();
     expect(createSessionResponseBody.user_id).toBe(createUserResponseBody.id);
-    console.log("createSessionResponseBody:", createUserResponseBody);
   });
 
-  test("Get User Information", async () => {});
+  test("Get User Information", async () => {
+    const userResponse = await fetch("http://localhost:3000/api/v1/user", {
+      headers: {
+        Cookie: `session_id=${createSessionResponseBody.token}`,
+      },
+    });
+    expect(userResponse.status).toBe(200);
+
+    const userResponseBody = await userResponse.json();
+    expect(userResponseBody.id).toEqual(createUserResponseBody.id);
+  });
 });
