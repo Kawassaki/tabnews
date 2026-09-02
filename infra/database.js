@@ -8,6 +8,7 @@ async function query(queryObject) {
     const result = await client.query(queryObject);
     return result;
   } catch (error) {
+    console.log("erro ao executar query", error);
     const serviceErrorObject = new ServiceError({
       message: "Error connecting to the database or executing the query.",
       cause: error,

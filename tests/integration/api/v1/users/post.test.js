@@ -20,7 +20,7 @@ describe("POST /api/v1/users", () => {
         body: JSON.stringify({
           username: "contacto",
           email: "contacto@gmail.com",
-          password: "senha123",
+          password: "password123",
         }),
       });
 
@@ -42,11 +42,11 @@ describe("POST /api/v1/users", () => {
 
       const userInDatabase = await user.findOneByUsername("contacto");
       const correctPasswordMatch = await password.compare(
-        "senha123",
+        "password123",
         userInDatabase.password,
       );
       const incorrectPasswordMatch = await password.compare(
-        "senha1234",
+        "password1234",
         userInDatabase.password,
       );
 
@@ -63,7 +63,7 @@ describe("POST /api/v1/users", () => {
         body: JSON.stringify({
           username: "DuplicatedusernamE",
           email: "duplicatedusername1@gmail.com",
-          password: "senha123",
+          password: "password123",
         }),
       });
 
@@ -77,7 +77,7 @@ describe("POST /api/v1/users", () => {
         body: JSON.stringify({
           username: "duplicatedusername",
           email: "duplicatedusername2@gmail.com",
-          password: "senha123",
+          password: "password123",
         }),
       });
       expect(response2.status).toBe(400);
@@ -101,7 +101,7 @@ describe("POST /api/v1/users", () => {
         body: JSON.stringify({
           username: "duplicatedemail1",
           email: "duplicado@gmail.com",
-          password: "senha123",
+          password: "password123",
         }),
       });
 
@@ -115,7 +115,7 @@ describe("POST /api/v1/users", () => {
         body: JSON.stringify({
           username: "duplicatedemail2",
           email: "Duplicado@gmail.com",
-          password: "senha123",
+          password: "password123",
         }),
       });
       expect(response2.status).toBe(400);
