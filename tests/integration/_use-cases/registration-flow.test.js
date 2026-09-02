@@ -93,6 +93,7 @@ describe("Use Case: Registration Flow (all successful)", () => {
 
     const createSessionResponseBody = await response.json();
     expect(createSessionResponseBody.user_id).toBe(createUserResponseBody.id);
+    console.log("createSessionResponseBody:", createUserResponseBody);
   });
 
   test("Get User Information", async () => {});
