@@ -1,3 +1,21 @@
+export class ForbiddenError extends Error {
+  constructor({ cause, message, action }) {
+    super(message || "Forbidden", { cause });
+    this.name = "ForbiddenError";
+    this.action = action || "Check the required features to continue";
+    this.statusCode = 403;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
+
 export class InternalServerError extends Error {
   constructor({ cause, statusCode }) {
     super("An unexpected internal error occurred", { cause });

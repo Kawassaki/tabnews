@@ -78,7 +78,22 @@ describe("Use Case: Registration Flow (all successful)", () => {
     expect(actvatedUser.features).toEqual(["create:session"]);
   });
 
-  test("Login", async () => {});
+  test("Login", async () => {
+    const response = await fetch("http://localhost:3000/api/v1/sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "registration-flow@gmail.com",
+        password: "password123",
+      }),
+    });
+    expect(response.status).toBe(201);
+
+    const createSessionResponseBody = await response.json();
+    expect(createSessionResponseBody.user_id).toBe(createUserResponseBody.id);
+  });
 
   test("Get User Information", async () => {});
 });
