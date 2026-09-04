@@ -57,9 +57,9 @@ async function runPendingMigrations() {
 async function createUser(userObject) {
   return await user.create({
     username:
-      userObject.username || faker.internet.username().replace(/[_.-]/g, ""),
-    email: userObject.email || faker.internet.email(),
-    password: userObject.password || faker.internet.password(),
+      userObject?.username || faker.internet.username().replace(/[_.-]/g, ""),
+    email: userObject?.email || faker.internet.email(),
+    password: userObject?.password || faker.internet.password(),
   });
 }
 
@@ -100,6 +100,10 @@ async function activateUser(inactiveUser) {
   return await activation.activateUserByUserId(inactiveUser.id);
 }
 
+async function createActivationToken(userId) {
+  return await activation.create(userId);
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
@@ -110,6 +114,7 @@ const orchestrator = {
   getLastEmail,
   extractUUID,
   activateUser,
+  createActivationToken,
 };
 
 export default orchestrator;
