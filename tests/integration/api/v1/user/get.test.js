@@ -50,7 +50,7 @@ describe("GET /api/v1/user", () => {
       expect(responseBody).toEqual({
         id: createdUser.id,
         username: "UserWithValidSessions",
-        features: ["create:session", "read:session"],
+        features: ["create:session", "read:session", "update:user"],
         password: createdUser.password,
         email: createdUser.email,
         created_at: createdUser.created_at.toISOString(),
@@ -111,7 +111,7 @@ describe("GET /api/v1/user", () => {
       expect(responseBody).toEqual({
         id: createdUser.id,
         username: "UserWithValidSessionToExpire",
-        features: ["create:session", "read:session"],
+        features: ["create:session", "read:session", "update:user"],
         password: createdUser.password,
         email: createdUser.email,
         created_at: createdUser.created_at.toISOString(),
