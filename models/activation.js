@@ -123,7 +123,6 @@ async function markTokenAsUsed(activationTokenId) {
 
 async function activateUserByUserId(userId) {
   const userToActivate = await user.findOneById(userId);
-
   if (!authorization.can(userToActivate, "read:activation_token")) {
     throw new ForbiddenError({
       message: "User does not have permission to perform this action",
