@@ -1,5 +1,7 @@
 import retry from "async-retry";
 import { faker } from "@faker-js/faker";
+import fs from "node:fs";
+import path from "node:path";
 
 import database from "infra/database.js";
 import migrator from "models/migrator.js";
@@ -109,6 +111,22 @@ async function addFeatureToUser(userObject, features) {
   return updatedUser;
 }
 
+const migrationsDir = path.resolve("infra", "migrations");
+
+function createPendingMigration() {
+  const timestamp = Date.now();
+  const fileName = `${timestamp}_test-migration.js`;
+  const filePath = path.join(migrationsDir, fileName);
+
+  fs.writeFileSync(filePath, `exports.up = () => {};\nexports.down = false;\n`);
+
+  return filePath;
+}
+
+function removePendingMigration(filePath) {
+  fs.unlinkSync(filePath);
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
@@ -121,6 +139,8 @@ const orchestrator = {
   activateUser,
   createActivationToken,
   addFeatureToUser,
+  createPendingMigration,
+  removePendingMigration,
 };
 
 export default orchestrator;

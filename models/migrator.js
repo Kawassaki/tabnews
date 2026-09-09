@@ -42,9 +42,21 @@ async function runPendingMigrations() {
   }
 }
 
+async function clearAllMigrations() {
+  let dbClient;
+  try {
+    dbClient = await database.getNewClient();
+
+    await database.query("TRUNCATE TABLE pgmigrations;");
+  } finally {
+    await dbClient?.end();
+  }
+}
+
 const migrator = {
   listPendingMigrations,
   runPendingMigrations,
+  clearAllMigrations,
 };
 
 export default migrator;
