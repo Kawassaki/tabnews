@@ -2,12 +2,11 @@ import { createRouter } from "next-connect";
 import controller from "infra/contoller.js";
 import activation from "models/activation.js";
 import authorization from "models/authorization.js";
-const router = createRouter();
 
-router.use(controller.injectAnonymousOrUser);
-router.patch(controller.canRequest("read:activation_token"), patchHandler);
-
-export default router.handler(controller.errorHandlers);
+export default createRouter()
+  .use(controller.injectAnonymousOrUser)
+  .patch(controller.canRequest("read:activation_token"), patchHandler)
+  .handler(controller.errorHandlers);
 
 async function patchHandler(request, response) {
   const activationTokenId = request.query.token_id;
