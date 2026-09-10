@@ -39,7 +39,7 @@ describe("POST /api/v1/migrations", () => {
       const activatedPrivilegedUser =
         await orchestrator.activateUser(privilegedUser);
       const privilegedUserSessionObject = await orchestrator.createSession(
-        activatedPrivilegedUser.id,
+        activatedPrivilegedUser,
       );
 
       const response = await fetch(`${webserver.origin}/api/v1/migrations`, {
@@ -73,7 +73,7 @@ describe("POST /api/v1/migrations", () => {
           "create:migration",
         ]);
         privilegedUserSessionObject = await orchestrator.createSession(
-          activatedPrivilegedUser.id,
+          activatedPrivilegedUser,
         );
 
         migrationFilePath = orchestrator.createPendingMigration();
