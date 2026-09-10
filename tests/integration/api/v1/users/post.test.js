@@ -20,7 +20,7 @@ describe("POST /api/v1/users", () => {
         body: JSON.stringify({
           username: "contacto",
           email: "contacto@gmail.com",
-          password: "senha123",
+          password: "password123",
         }),
       });
 
@@ -30,8 +30,7 @@ describe("POST /api/v1/users", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: "contacto",
-        email: "contacto@gmail.com",
-        password: responseBody.password,
+        features: ["read:activation_token"],
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -41,11 +40,11 @@ describe("POST /api/v1/users", () => {
 
       const userInDatabase = await user.findOneByUsername("contacto");
       const correctPasswordMatch = await password.compare(
-        "senha123",
+        "password123",
         userInDatabase.password,
       );
       const incorrectPasswordMatch = await password.compare(
-        "senha1234",
+        "password1234",
         userInDatabase.password,
       );
 
@@ -62,7 +61,7 @@ describe("POST /api/v1/users", () => {
         body: JSON.stringify({
           username: "DuplicatedusernamE",
           email: "duplicatedusername1@gmail.com",
-          password: "senha123",
+          password: "password123",
         }),
       });
 
@@ -76,7 +75,7 @@ describe("POST /api/v1/users", () => {
         body: JSON.stringify({
           username: "duplicatedusername",
           email: "duplicatedusername2@gmail.com",
-          password: "senha123",
+          password: "password123",
         }),
       });
       expect(response2.status).toBe(400);
@@ -100,7 +99,7 @@ describe("POST /api/v1/users", () => {
         body: JSON.stringify({
           username: "duplicatedemail1",
           email: "duplicado@gmail.com",
-          password: "senha123",
+          password: "password123",
         }),
       });
 
@@ -114,7 +113,7 @@ describe("POST /api/v1/users", () => {
         body: JSON.stringify({
           username: "duplicatedemail2",
           email: "Duplicado@gmail.com",
-          password: "senha123",
+          password: "password123",
         }),
       });
       expect(response2.status).toBe(400);
@@ -126,6 +125,37 @@ describe("POST /api/v1/users", () => {
         message: "Email already in use",
         action: "Please use a different email address.",
         status_code: 400,
+      });
+    });
+  });
+
+  describe("Default user", () => {
+    test("With unique and valid data", async () => {
+      const user1 = await orchestrator.createUser();
+      await orchestrator.activateUser(user1);
+      const user1SessionObject = await orchestrator.createSession(user1.id);
+
+      const user2Response = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session_id=${user1SessionObject.token}`,
+        },
+        body: JSON.stringify({
+          username: "contact",
+          email: "contact@gmail.com",
+          password: "password123",
+        }),
+      });
+
+      expect(user2Response.status).toBe(403);
+
+      const user2ResponseBody = await user2Response.json();
+      expect(user2ResponseBody).toEqual({
+        name: "ForbiddenError",
+        message: "User does not have permission to perform this action",
+        action: "Check if the user has the feature: create:user",
+        status_code: 403,
       });
     });
   });
