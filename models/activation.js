@@ -89,12 +89,12 @@ async function sendEmailToUser(user, activationToken) {
     to: user.email,
     subject: "Activate your account on FinTab",
     text: `${user.username}, click the link below to activate your account
-    
-${webserver.origin}/register/activate/${activationToken.id}
-   
-Best regards,
-FinTab Team
-   `,
+      
+  ${webserver.origin}/register/activate/${activationToken.id}
+     
+  Best regards,
+  FinTab Team
+     `,
   });
 }
 

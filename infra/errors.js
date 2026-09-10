@@ -36,10 +36,11 @@ export class InternalServerError extends Error {
 }
 
 export class ServiceError extends Error {
-  constructor({ cause, message }) {
+  constructor({ cause, message, context, action }) {
     super(message || "Service unavailable.", { cause });
     this.name = "ServiceError";
-    this.action = "Check the service status or try again later.";
+    this.context = context;
+    this.action = action || "Check the service status or try again later.";
     this.statusCode = 503;
   }
 
@@ -49,6 +50,7 @@ export class ServiceError extends Error {
       message: this.message,
       action: this.action,
       status_code: this.statusCode,
+      context: this.context,
     };
   }
 }
