@@ -73,15 +73,7 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
           method: "PATCH",
         },
       );
-      expect(response2.status).toBe(404);
-
-      const responseBody = await response2.json();
-      expect(responseBody).toEqual({
-        name: "NotFoundError",
-        action: "Please request a new activation token or contact support.",
-        message: "Activation token is expired or not found",
-        status_code: 404,
-      });
+      expect(response2.status).toBe(200);
     });
 
     test("With valid token", async () => {

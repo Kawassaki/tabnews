@@ -14,6 +14,15 @@ async function patchHandler(request, response) {
   const validActivationToken =
     await activation.findOneValidById(activationTokenId);
 
+  if (validActivationToken.used_at) {
+    const secureOutputValues = authorization.filterOutput(
+      userTryingToActivate,
+      "read:activation_token",
+      validActivationToken,
+    );
+    return response.status(200).json(secureOutputValues);
+  }
+
   await activation.activateUserByUserId(validActivationToken.user_id);
 
   const usedActivationToken =
@@ -24,5 +33,6 @@ async function patchHandler(request, response) {
     "read:activation_token",
     usedActivationToken,
   );
+
   return response.status(200).json(secureOutputValues);
 }
